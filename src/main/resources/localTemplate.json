@@ -1,0 +1,42 @@
+{
+  "version": "3.1",
+  "host": "localhost",
+  "cacheKey": "c$no$",
+  "code": "c$no$",
+  "name": "Zerocode Innovations",
+  "email": "naresh.g@thresholdsoft.com",
+  "phone": "8639223068",
+  "phoneDetails": {
+    "isd": "+91",
+    "country": "IN",
+    "no": "8639223068"
+  },
+  "client_admin": {
+    "name": "Naresh",
+    "email": "naresh.g@thresholdsoft.com",
+    "phone": "8639223068"
+  },
+  "user_admin": {
+    "name": "Naresh",
+    "email": "naresh.g@thresholdsoft.com",
+    "phone": "8639223068"
+  },
+  "contact_name": "Naresh",
+  "contact_email": "naresh.g@thresholdsoft.com",
+  "contact_phone": "8639223068",
+  "client_secret": "883919",
+  "client_authorization": "865305",
+  "db_type": "MYSQL",
+  "country": "IN",
+  "status": "Active",
+  "env": "dev",
+  "db_conn_config": {
+   #?"db_host": "$host$",#?
+   #?"db_port": "$port$",#?
+   #?"db_password": "$pwd$",#?
+   "db_type": "mysql",
+   "db_name": "zc_c$no$"
+  },
+  "clientDb": "zc_c$no$",
+  "clientAdminDb": "zc_c$no$_admin"
+}

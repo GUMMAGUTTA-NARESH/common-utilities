@@ -1,0 +1,68 @@
+public static void t(int t) {
+		String myTime = "12:00";
+		int minsToAdd = t;
+		Date date = new Date();
+		date.setTime((((Integer.parseInt(myTime.split(":")[0]))*60 + (Integer.parseInt(myTime.split(":")[1])))+ date.getTimezoneOffset())*60000);
+		System.out.println(date.getHours() + ":"+date.getMinutes());
+		date.setTime(date.getTime()+ minsToAdd *60000);
+		System.out.println(date.getHours() + ":"+date.getMinutes());
+	}
+	
+	public static void times(int time) throws ParseException {
+		Calendar cal = Calendar.getInstance();
+		String dateS = "12:00 AM";
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm aa", Locale.ENGLISH);
+		cal.setTime(formatter.parse(dateS));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		int date =  cal.get(Calendar.DATE);
+		List<Object> ls = new ArrayList<Object>();
+		while ( date == cal.get(Calendar.DATE) )
+		{
+			 int am_pm = cal.get(Calendar.AM_PM);
+			    String ampm = "ampm";
+			    ampm = am_pm==0?"AM":"PM";
+		   int hours = cal.get(Calendar.HOUR);
+		   int minutes = cal.get(Calendar.MINUTE);
+		   hours = hours == 0 ? 12: hours; //if it is 0, then make it 12
+//		   String ampm = "am";
+//		   ampm = hours > 12 ? "pm": "am";
+		   hours = hours > 12 ? hours - 12: hours; //if more than 12, reduce 12 and set am/pm flag
+		   if(minutes==0) {
+			   ls.add(hours + ":" + minutes+"0" + " " + ampm);
+		   }else  ls.add(hours + ":" + minutes + " " + ampm);
+//		   cal.set(Calendar.MINUTE, cal.get(Calendar.MINUTE)+time);
+		   cal.add(Calendar.MINUTE, time);
+//		   cal.set(Calendar.AM_PM, Calendar.PM);
+		}
+		System.out.println(ls);
+	}
+	@SuppressWarnings("deprecation")
+	public static void time(int time) throws ParseException {
+		String dateS = "12:00 AM";
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm aa", Locale.ENGLISH);
+		Date dateD = formatter.parse(dateS);
+		System.out.println(dateD);
+		Date d = new Date(); //get a date object
+		dateD.setHours(0); 
+		int date = dateD.getDate();
+		String[] timeArr = null;
+		List<Object> ls = new ArrayList<Object>();
+		while ( date == dateD.getDate() )
+		{
+		   int hours = dateD.getHours();
+		   int minutes = dateD.getMinutes();
+		   hours = hours == 0 ? 12: hours; //if it is 0, then make it 12
+		   String ampm = "am";
+		   ampm = hours > 12 ? "pm": "am";
+		   hours = hours > 12 ? hours - 12: hours; //if more than 12, reduce 12 and set am/pm flag
+////		   hours = ( "0" + hours ).slice(-2); //pad with 0
+//		   minute = ( "0" + d.getMinutes() ).slice(-2); //pad with 0
+		   if(minutes==0) {
+			   ls.add(hours + ":" + minutes+"0" + " " + ampm);
+		   }else  ls.add(hours + ":" + minutes + " " + ampm);
+		  
+//		   timeArr.push( hours + ":" + minute + " " + ampm );
+		   dateD.setMinutes( dateD.getMinutes() + time); //increment by 5 minutes
+		}
+		System.out.println(ls);
+	}

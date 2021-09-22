@@ -1,0 +1,13 @@
+{
+	"log": {
+		"Author": "GUMMAGUTTA NARESH",
+		"Author Email": "naresh.g@thresholdsoft.com",
+		"phone": "+91 8639223068",
+		"Client Name": "$client$",
+		"Client From": "$from$",
+		"Client To": "$to$",
+		"IP Address": "$ip$",
+		"created_time": "$time$",
+		"created date": "$date$"
+	}
+}

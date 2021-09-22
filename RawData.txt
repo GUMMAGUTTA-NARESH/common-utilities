@@ -1,0 +1,67 @@
+
+	@SuppressWarnings("resource")
+	public static String createTable(String file, String table) throws IOException {
+		Map<String, Integer> columnss = new LinkedHashMap<String, Integer>();
+		Map<Integer, String> colms = new LinkedHashMap<Integer, String>();
+		Map<Integer, Object> dataType = new LinkedHashMap<Integer, Object>();
+		try (FileInputStream fis = new FileInputStream(file)) {
+            XSSFWorkbook workbook = new XSSFWorkbook(fis);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            
+            sheet.getRow(0).forEach(cell ->{
+            	columnss.put(cell.getStringCellValue(), cell.getColumnIndex());
+            });
+            sheet.getRow(0).forEach(cell ->{
+            	colms.put(cell.getColumnIndex(),cell.getStringCellValue());
+            });
+            System.out.println(columnss);
+
+            Iterator rows = sheet.rowIterator();
+            Row row1 = (Row) rows.next();
+            while (rows.hasNext()) {
+                XSSFRow row = (XSSFRow) rows.next();
+                Iterator cells = row.cellIterator();
+                
+                while (cells.hasNext()) {
+                    XSSFCell cell = (XSSFCell) cells.next();
+
+                    CellType type = cell.getCellType();
+                    if (type == CellType.STRING) {
+//                    	if(cell.getColumnIndex() == columnss.get(cell.getStringCellValue().toString())){
+//                    		System.out.println("THis is Same");
+//                    	}
+                    	 dataType.put(cell.getColumnIndex(), "String");
+                    	System.out.println("ABC"+row.getCell(0));
+                        System.out.println("[" + cell.getRowIndex() + ", "
+                            + cell.getColumnIndex() + "] = STRING; Value = "
+                            + cell.getRichStringCellValue().toString());
+                        if(cell.getRichStringCellValue().toString().length() > 40)
+                        System.out.println("this Text Area Field");
+                    } else if (type == CellType.NUMERIC) {
+                    	 dataType.put(cell.getColumnIndex(), "Int");
+                        System.out.println("[" + cell.getRowIndex() + ", "
+                            + cell.getColumnIndex() + "] = NUMERIC; Value = "
+                            + cell.getNumericCellValue());
+                        if(cell.getNumericCellValue() > 999999999) {
+                        	System.out.println("This is Phone");
+                        }
+                    } else if (type == CellType.BOOLEAN) {
+                    	dataType.put(cell.getColumnIndex(), "Boolean");
+                        System.out.println("[" + cell.getRowIndex() + ", "
+                            + cell.getColumnIndex() + "] = BOOLEAN; Value = "
+                            + cell.getBooleanCellValue());
+                    } else if (type == CellType.BLANK) {
+                        System.out.println("[" + cell.getRowIndex() + ", "
+                            + cell.getColumnIndex() + "] = BLANK CELL");
+                    } else if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        System.out.println("The cell contains a date value: "
+                                + cell.getDateCellValue());
+                    }
+                    System.out.println(dataType);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+			return null;
+	}
