@@ -17,13 +17,10 @@ public class FilesMain {
 //		System.out.println(Utility.validateAadharNumber("545283344448"));
 		long start = System.currentTimeMillis();
 		String s = Utility.generateAadhar();
-		List<String> list = Utility.generateAadhar(1000);
+		System.out.println(s);
+		List<String> list = Utility.generateAadhar(3);
 		System.out.println(list);
 		long end = System.currentTimeMillis();
 		System.out.println("Total Time Taken: "+(end-start)/1000+" seconds");
-		System.out.println("commit added here for dev");
-		System.out.println("commit added here for new branch");
-		System.out.println("commit added here for new branch");
-	
 	}
 }

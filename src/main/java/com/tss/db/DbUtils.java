@@ -74,9 +74,9 @@ public class DbUtils {
 		return listOfRec;
 	}
 	
-	public static void execute(String sql, Connection connection) throws SQLException {
+	public static int execute(String sql, Connection connection) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
-		preparedStatement.executeUpdate();
+		return preparedStatement.executeUpdate();
 	}
 	public static int createTable(Connection connection, String file,String schema, boolean wantDefaults) throws Exception {
 		String sql = DbExcelUtils.queryBuilder(file, schema, wantDefaults);
