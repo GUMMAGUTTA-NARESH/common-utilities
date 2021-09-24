@@ -3,6 +3,8 @@
  */
 package com.tss.db;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -66,5 +68,9 @@ public class Script {
 				}
 			}
 		}
+	}
+	public static void main(String[] args) throws IOException {
+		Process process = Runtime.getRuntime().exec("notepad.exe", null, new File("G:\\InputFiles\\Dbs\\Base script dbs v35"));
+		System.out.println(process);
 	}
 }
