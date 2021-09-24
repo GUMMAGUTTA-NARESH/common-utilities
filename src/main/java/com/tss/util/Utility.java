@@ -34,7 +34,6 @@ import com.tss.service.GnMap;
 
 public class Utility {
 	
-	@SuppressWarnings("unused")
 	private static Logger log = Logger.getLogger(Utility.class.toString());
 	
 	public static final char GRAVE = '`';
