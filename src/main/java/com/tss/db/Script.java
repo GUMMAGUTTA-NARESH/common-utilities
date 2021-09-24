@@ -69,8 +69,4 @@ public class Script {
 			}
 		}
 	}
-	public static void main(String[] args) throws IOException {
-		Process process = Runtime.getRuntime().exec("notepad.exe", null, new File("G:\\InputFiles\\Dbs\\Base script dbs v35"));
-		System.out.println(process);
-	}
 }
