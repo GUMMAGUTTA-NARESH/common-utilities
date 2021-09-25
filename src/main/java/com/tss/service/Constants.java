@@ -17,9 +17,9 @@ public class Constants {
 	public static final String TRUNCATE ="SELECT \r\n" + 
 			"    CONCAT('TRUNCATE TABLE {{schema}}.',\r\n" + 
 			"            table_name)\r\n" + 
-			"FROM\r\n" + 
+			"	FROM\r\n" + 
 			"    INFORMATION_SCHEMA.TABLES\r\n" + 
-			"WHERE\r\n" + 
+			"	WHERE\r\n" + 
 			"    table_schema = '{{schema}}' AND (TABLE_NAME LIKE '%audit' OR TABLE_NAME LIKE '%queue'\r\n" + 
 			"    OR TABLE_NAME LIKE '%survey%'\r\n" + 
 			"    OR TABLE_NAME LIKE '%mobile%'\r\n" + 
