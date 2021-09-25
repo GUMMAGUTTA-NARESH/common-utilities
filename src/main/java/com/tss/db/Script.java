@@ -3,8 +3,6 @@
  */
 package com.tss.db;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +50,7 @@ public class Script {
 	}
 	
 	public void polishDatabase(Connection connection, String schema,  boolean isTruncate) throws SQLException {
-		String query = isTruncate ? Constants.TRUNCATE:Constants.DELETE;
+		String query = isTruncate ? Constants.TRUNCATE : Constants.DELETE;
 		query = query.replace("{{schema}}", schema);
 		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
 //		DbUtils.execute("SET SQL_SAFE_UPDATES = 0;", connection);
