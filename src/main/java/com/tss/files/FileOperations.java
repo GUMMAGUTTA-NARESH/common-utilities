@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 
 import com.tss.model.Profile;
+import com.tss.service.GnMap;
 import com.tss.util.Utility;
 
 public class FileOperations {
@@ -147,8 +148,8 @@ public class FileOperations {
 		return "Moved";
 	}
 	
-	public static Map<String, Object> search(String dir, String fileExtension, boolean needFile) throws IOException {
-		Map<String, Object> map = new LinkedHashMap<String, Object>();
+	public static GnMap search(String dir, String fileExtension, boolean needFile) throws IOException {
+		GnMap map = new GnMap();
 		Path path = Paths.get(dir);
 		List<String> result = null;
 		if (!Files.isDirectory(path)) throw new IllegalArgumentException("Path must be a directory!");

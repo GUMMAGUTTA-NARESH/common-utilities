@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.Map;
 
 import com.tss.files.FileOperations;
+import com.tss.service.GnMap;
 
 /**
  * @author NARESH GUMMAGUTTA
@@ -16,7 +17,7 @@ import com.tss.files.FileOperations;
 public class TestAllMains {
 	
 	public static void main(String[] args) throws ParseException, IOException {
-		Map<String, Object> files = FileOperations.search("G:\\InputFiles", "txt", true);
+		GnMap files = FileOperations.search("G:\\Data", "gif", true);
 		System.out.println(files);
 	}
 }

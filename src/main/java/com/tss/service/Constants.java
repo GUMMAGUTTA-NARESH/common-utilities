@@ -28,5 +28,9 @@ public class Constants {
 			"    OR TABLE_NAME LIKE '%history%'\r\n" +
 			"    OR TABLE_NAME LIKE '%xref%'\r\n" +
 			"    OR TABLE_NAME LIKE '%stage%');";
+	
+	public static final String MYSQL_PATH = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin";
+	public static final String MYSQL_SHELL_PATH = "C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\";
+	
 
 }
