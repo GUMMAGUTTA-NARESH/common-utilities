@@ -35,6 +35,7 @@ public class GenerateLicenses {
 		
 		List<String> clients = Utility.readFileIntoList("C:\\Users\\G NARESH\\Desktop\\clients.txt");
 		LicenseGenerator.getLicenses(res);
+		System.out.println(EncryptDecryptUtil.decrypt(null));
 		
 //		LicenseGenerator.getLicenses(LOCALHOST_TEMPLATE, DESTINATION, 1, 15, "abc",true);
 //		System.out.println(Utility.isExcel("acb.csv"));
