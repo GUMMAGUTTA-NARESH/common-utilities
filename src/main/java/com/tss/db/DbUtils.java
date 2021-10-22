@@ -1,6 +1,11 @@
 package com.tss.db;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,9 +17,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.tss.service.DbExcelUtils;
 import com.tss.util.Utility;
@@ -54,6 +68,7 @@ public class DbUtils {
 			preStmt.setObject(++index, value);
 		return preStmt;
 	}
+	
 	public static List<Map<String, Object>> getMapList(Connection conn, String sql, Object... args)
 			throws SQLException {
 		PreparedStatement preStmt = query(conn, sql, args);
@@ -194,6 +209,14 @@ public class DbUtils {
 		return base64Image;
 	}
 	
+	private static PreparedStatement getPreparedStatement(Connection connection, String query, Object... args) throws SQLException {
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		int index = 0;
+		for (Object value : args)
+			preparedStatement.setObject(++index, value);
+		return preparedStatement;
+	}
+	
 	public static boolean getResultset(Connection connection, String sql) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sql);
 		ResultSet resultSet = preparedStatement.executeQuery();
@@ -207,24 +230,167 @@ public class DbUtils {
 		return false;
 	}
 	
+	private static ResultSet getExecuteQuery(Connection connection, String query, Object... args) throws SQLException {
+		PreparedStatement preparedStatement = getPreparedStatement(connection, query, args);
+		ResultSet resultSet = getPreparedStatement(connection, query, args).executeQuery();
+		preparedStatement.close();
+//		resultSet.close();
+		return resultSet;
+	}
 	
-//	public static String extractFileName(Part part) {
-//		String contentDisp = part.getHeader("content-disposition");
-//		String[] items = contentDisp.split(";");
-//		for (String s : items) {
-//			if (s.trim().startsWith("filename")) {
-//				return s.substring(s.indexOf("=") + 2, s.length() - 1);
-//			}
-//		}
-//		return "";
-//	}
-//	public static String fileUpload(Part part) throws IOException {
-//		File fileSaveDir = new File(FILE_PATH+"/"+part.getSubmittedFileName());
-//		InputStream stream = part.getInputStream();
-//		Files.copy(stream, fileSaveDir.toPath(), StandardCopyOption.REPLACE_EXISTING);
-//		stream.close();
-//		return fileSaveDir.toString();
-//	}
+	public static ResultSet getExecuteQueryForNaarms(Connection connection, String query, Object... args) throws SQLException {
+		PreparedStatement preparedStatement = getPreparedStatement(connection, query, args);
+		ResultSet resultSet = getPreparedStatement(connection, query, args).executeQuery();
+		preparedStatement.close();
+//		resultSet.close();
+		return resultSet;
+	}
 	
-
+	public static String getResultsetToExcel(Connection connection, String query,String fileName,Object...args) throws SQLException, FileNotFoundException, IOException {
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		ResultSet resultSet = getExecuteQuery(connection, query, args);
+		preparedStatement.close();
+		return DatabaseToExcel.databaseToExcel(resultSet, fileName, connection);
+	}
+	
+	public static String getResultsetToExcelForNaarm(Connection connection, String query,String fileName,String s,Object...args) throws SQLException, FileNotFoundException, IOException {
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		ResultSet resultSet = getExecuteQuery(connection, query, args);
+		preparedStatement.close();
+		return DatabaseToExcel.databaseToExcelForNaarm(resultSet, fileName, connection, s);
+	}
+	
+	public static List<Map<String, Object>> getMapListForNaarm(Connection conn, String sql)
+			throws SQLException {
+		PreparedStatement preStmt = query(conn, sql);
+		ResultSet resultSet = preStmt.executeQuery();
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		List<Map<String, Object>> listOfRec = new ArrayList<Map<String, Object>>();
+		Map<String, Object> record = null;
+		while (resultSet.next()) {
+			record = new HashMap<String, Object>();
+			for (int i = 1; i <= metaData.getColumnCount(); i++)
+				record.put(metaData.getColumnName(i), resultSet.getObject(i));
+			listOfRec.add(record);
+		}
+		preStmt.close();
+		resultSet.close();
+		if (listOfRec.size() == 0)
+			return null;
+		return listOfRec;
+	}
+	
+	public static void insertDataFromDbToExcelForNaarm(String file, Connection conn, String query) throws Exception {
+		Statement statement = conn.createStatement();
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Research areas");
+		XSSFRow row = null;
+		XSSFCell cell = null;
+		int rowNum = 0;
+		row = sheet.createRow(rowNum);
+		List<Map<String, Object>> headings = DbUtils.getMapList(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
+		List<String> headingsList = new ArrayList<String>();
+		headingsList.add("INSTITUTE NAME");
+		for(Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
+		//headings
+		for (int cellNum = 0; cellNum < headingsList.size(); cellNum++) {
+			cell = row.createCell(cellNum);
+			cell.setCellValue(headingsList.get(cellNum));
+			sheet.autoSizeColumn(cellNum);
+		}
+		rowNum++;
+		
+		List<Map<String, Object>> institute = DbUtils.getMapList(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
+		List<String> instituteList = new ArrayList<String>();
+		for(Map<String, Object> m : institute) m.forEach((key, value) -> instituteList.add(value.toString()));
+		
+		for(int a = 0; a < institute.size(); a++) {
+			String s = instituteList.get(a);
+			ResultSet set = statement.executeQuery( "SELECT temp_institution, data ,temp_research_areas FROM `zc_naarm`.`wos_research_areas_data` WHERE  temp_institution = '"+s+"';");
+			row = sheet.createRow(rowNum);
+			int cellNum = 0;
+			cell = row.createCell(cellNum++);
+			cell.setCellValue(s); //insertion
+			sheet.autoSizeColumn(cellNum);
+			while (set.next()) {
+				cell = row.createCell(cellNum++);
+//				if (row.getCell(cellNum).toString().equalsIgnoreCase(set.getString(3))) {
+//					if (row.getCell(cellNum).getStringCellValue().equalsIgnoreCase(set.getString(3))) {
+//						System.out.println(row.getCell(cellNum).getStringCellValue());
+					cell.setCellValue((int) Double.parseDouble(set.getString(2))); // insertion
+//				}
+			}
+			rowNum++;
+		}
+		FileOutputStream out = new FileOutputStream(new File(file));
+		workbook.write(out);
+		out.close();
+		workbook.close();
+	}
+	
+	private static List<String> getData(Connection conn, String query) throws Exception{
+		List<Map<String, Object>> headings = DbUtils.getMapList(conn, query);
+		List<String> headingsList = new ArrayList<String>();
+//		headingsList.add("INSTITUTE NAME");
+		for (Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
+		return headingsList;
+	}
+	
+	public static void insertDataFromDbToExcelForNaarmIt(String file, Connection conn, String query) throws Exception {
+		Statement statement = conn.createStatement();
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Research Areas");
+		String[] cols = Utility.fileDataToStrArr("C:\\Users\\G NARESH\\Downloads\\narmdata.txt");
+		XSSFRow row = null;
+		XSSFCell cell = null;
+		int rowNum = 0;
+		row = sheet.createRow(rowNum);
+		List<Map<String, Object>> headings = DbUtils.getMapList(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
+		List<String> headingsList = new ArrayList<String>();
+		headingsList.add("INSTITUTE NAME");
+		for (Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
+		// headings
+		for (int cellNum = 0; cellNum < headingsList.size(); cellNum++) {
+			cell = row.createCell(cellNum);
+			cell.setCellValue(headingsList.get(cellNum));
+			sheet.autoSizeColumn(cellNum);
+		}
+		rowNum++;
+		List<Map<String, Object>> institute = DbUtils.getMapList(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
+		List<String> instituteList = new ArrayList<String>();
+		for (Map<String, Object> m : institute)
+			m.forEach((key, value) -> instituteList.add(value.toString()));
+		for (int a = 0; a < institute.size(); a++) {
+			String s = instituteList.get(a);
+			ResultSet set = statement.executeQuery("SELECT temp_institution, data, temp_research_areas FROM `zc_naarm`.`wos_research_areas_data` WHERE  temp_institution = '" + s + "';");
+			row = sheet.createRow(rowNum);
+			int cellNum = 0;
+			int i = 1;
+			int j = 0;
+			List<String> arr = new ArrayList<String>();
+			List<String> data = new ArrayList<String>();
+			cell = row.createCell(cellNum++);
+			cell.setCellValue(s); // institute insertion
+			sheet.autoSizeColumn(cellNum);
+			while (set.next()) {
+				arr.add(set.getString(3));
+				data.add(set.getString(2));
+				cell = row.createCell(cellNum++);
+				if (headingsList.get(i).equalsIgnoreCase(arr.get(j))) {
+					cell.setCellValue((int) Double.parseDouble(data.get(j))); // data insertion
+				} else {
+					cell.setCellValue("NULL");
+					j--;
+//					cell = row.createCell(cellNum++);
+				}
+				i++;
+				j++;
+			}
+			rowNum++;
+		}
+		FileOutputStream out = new FileOutputStream(new File(file));
+		workbook.write(out);
+		out.close();
+		workbook.close();
+	}
 }
