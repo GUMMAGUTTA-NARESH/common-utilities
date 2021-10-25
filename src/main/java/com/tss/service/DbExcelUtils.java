@@ -3,6 +3,7 @@ package com.tss.service;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -18,7 +19,11 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFPicture;
+import org.apache.poi.xssf.usermodel.XSSFPictureData;
 import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFShape;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -174,5 +179,37 @@ public class DbExcelUtils {
 		String qry =  (flag) ? Constants.CREATE_TABLE_DEFAULTS.replace("{{query}}", s).replace("{{table}}", Utility.encloseGrave(Utility.getFileName(file.toLowerCase()))).replace("{{scheme}}", Utility.encloseGrave(scheme)) 
 				: Constants.CREATE_TABLE.replace("{{query}}", s).replace("{{table}}", Utility.encloseGrave(Utility.getFileName(file.toLowerCase()))).replace("{{scheme}}", Utility.encloseGrave(scheme));
 	return ("default".equalsIgnoreCase(scheme)) ? qry.replace("`default`.", ""): qry;
+	}
+	
+	public static void imageFrmExcelToFolder(String file, String dir) throws Exception {
+		FileInputStream inpStream = new FileInputStream(new File(file));
+		XSSFWorkbook workbook = new XSSFWorkbook(inpStream);
+		XSSFSheet sheet = workbook.getSheetAt(0);
+        int pictureColumn = 4;
+
+        for (XSSFShape shape : sheet.getDrawingPatriarch()) {
+            if (shape instanceof XSSFPicture) {
+            	XSSFPicture picture = (XSSFPicture) shape;
+            	XSSFClientAnchor anchor = (XSSFClientAnchor) picture.getAnchor();
+
+                // Ensure to use only relevant pictures
+                if (anchor.getCol1() == pictureColumn) {
+
+                    // Use the row from the anchor
+                	XSSFRow pictureRow = sheet.getRow(anchor.getRow1());
+                    if (pictureRow != null) {
+                    	XSSFPictureData data = picture.getPictureData();
+						byte data1[] = data.getData();
+//						FileOutputStream out = new FileOutputStream(
+//								"F:\\images-naarm\\logos\\logo_" + (pictureRow.getRowNum()+1) + ".png");
+						FileOutputStream out = new FileOutputStream(dir+"\\logo_" + (pictureRow.getRowNum()+1) + ".png");
+						out.write(data1);
+						out.close();
+                       }
+                }
+            }
+        }
+        inpStream.close();
+		workbook.close();
 	}
 }

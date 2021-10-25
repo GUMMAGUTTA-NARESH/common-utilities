@@ -251,10 +251,10 @@ public class Utility {
 	}
 	
 	public static boolean isValidPanCard(String panCard) {
-		return panCard.matches("[A-Z]{5}[0-9]{4}[A-Z]{1}");
+		return isBlank(panCard) ?  false : panCard.matches("[A-Z]{5}[0-9]{4}[A-Z]{1}");
 	}
 	public static boolean isValidPassport(String passport) {
-		return passport.matches("[A-Z]{1}[0-9]{7}");
+		return isBlank(passport)? false : passport.matches("[A-Z]{1}[0-9]{7}");
 	}
 	public static String bytesToString(byte[] message) {
 		String str = "";
@@ -265,7 +265,7 @@ public class Utility {
 	}
 
 	public static String removeSpecialChars(String s) {
-		return s.replaceAll("[\\s\\-()]", "");
+		return isBlank(s)? "": s.replaceAll("[\\s\\-()]", "");
 	}
 	
 	public static String removeSpaces(String data) {
@@ -329,7 +329,7 @@ public class Utility {
 		Pattern aadharPattern = Pattern.compile("\\d{12}");
 		boolean isValidAadhar = aadharPattern.matcher(aadharNumber).matches();
 		if (isValidAadhar) {
-			isValidAadhar = Utility.validateVerhoeff(aadharNumber);
+			isValidAadhar = validateVerhoeff(aadharNumber);
 		}
 		return isValidAadhar;
 	}
@@ -357,16 +357,16 @@ public class Utility {
 	}
 	
 	public static boolean isValidPhone(String phone) {
-		return phone.matches(PHONE_REGEX);
+		return isBlank(phone) ? false : phone.matches(PHONE_REGEX);
 	}
 	
 	public static boolean isValidEmail(String email) {
-		return email.matches(EMAIL_REGEX);
+		return isBlank(email)? false : email.matches(EMAIL_REGEX);
 	}
 	
 	public static boolean isValidPassword(String password) {
 		////Password contains at least 5-12 characters and contains at least one Cap, one small, special symbol
-		return password.matches(PASSWORD_REGEX);
+		return isBlank(password)?false: password.matches(PASSWORD_REGEX);
 	}
 	
 	public static void main(String[] args) {
