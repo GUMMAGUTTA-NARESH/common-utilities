@@ -23,7 +23,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.tss.model.Profile;
 import com.tss.service.GnMap;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 public class FileOperations {
 
@@ -96,14 +96,14 @@ public class FileOperations {
 		Set<Object> set;
 		if (isExtensions) {
 			map = getCreationTime(path, true);
-			set = Utility.convertMapToSet(map, true);
+			set = GnUtil.convertMapToSet(map, true);
 		} else {
 			map = getCreationTime(path, false);
-			set = Utility.convertMapToSet(map, false);
+			set = GnUtil.convertMapToSet(map, false);
 		}
 		for (Object entry : set) {
 //		        System.out.println(entry.getKey() + ":" + entry.getValue());
-			String s = Utility.getDirectory(source, entry.toString());
+			String s = GnUtil.getDirectory(source, entry.toString());
 			System.out.println(s);
 		}
 		return "Done";

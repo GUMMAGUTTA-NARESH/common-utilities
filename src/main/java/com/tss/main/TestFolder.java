@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 public class TestFolder {
 	
@@ -39,12 +39,12 @@ public class TestFolder {
 		 List<String> updatedLines = lines.stream().filter(s -> !s.contains(searchString)).collect(Collectors.toList());
 		 FileUtils.writeLines(file, updatedLines, false);
 		} else {
-			String s = Utility.getJsonFromFile(filePath).replace(searchString, replaceWith);
+			String s = GnUtil.getJsonFromFile(filePath).replace(searchString, replaceWith);
 			if(isReplace) 
 //			s = s.replaceAll("#\\?.*?#\\?", "");
 //			s = s.replaceAll("(?m)^[ \t]*\r?\n", "");
 			s = (!isReplace) ? s.replaceAll("#\\?.*?#\\?", "").replaceAll("(?m)^[ \t]*\r?\n", "") : s.replaceAll("#\\?", "").replaceAll("(?m)^[ \t]*\r?\n", "");
-			Utility.fileWriter(s, new File(filePath));
+			GnUtil.fileWriter(s, new File(filePath));
 			
 		}
 	}

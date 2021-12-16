@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
@@ -36,7 +35,7 @@ import com.mongodb.client.model.Collation;
 import static com.mongodb.client.model.Filters.eq;
 
 import com.tss.service.GnMap;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 /**
  * @author NARESH GUMMAGUTTA

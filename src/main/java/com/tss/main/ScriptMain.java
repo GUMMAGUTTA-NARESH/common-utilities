@@ -32,6 +32,8 @@ public class ScriptMain {
 			DbUtils.execute("UPDATE zc_base_admin.app_api SET version=1 AND is_fixed = 1, is_publish = 1;", connection);
 			DbUtils.execute("UPDATE zc_base_admin.app_page SET version=1 AND is_fixed = 1, is_publish = 1;", connection);
 			DbUtils.execute("UPDATE zc_base_admin.app_process SET version=1 AND is_fixed = 1, is_publish = 1;", connection);
+			DbUtils.execute("UPDATE zc_base_admin.app_dataset SET can_delete = 0;", connection);
+			DbUtils.execute("UPDATE zc_base_admin.app_dataset_field SET can_delete = 0;", connection);
 //
 			DbUtils.execute("UPDATE zc_base_admin.app_publish_task SET `status`= Published , `release` = R-0;", connection);
 		}

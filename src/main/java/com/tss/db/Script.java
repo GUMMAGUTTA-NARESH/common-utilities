@@ -20,7 +20,7 @@ import org.apache.commons.collections4.map.HashedMap;
 
 import com.tss.service.Constants;
 import com.tss.service.GnMap;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 /**
  * @author NARESH GUMMAGUTTA
@@ -133,11 +133,11 @@ public class Script {
 	}
 	
 	public void readSql(String file, String dumpFile) throws Exception {
-		String str = Utility.getJsonFromFile(file);
-		String fileName = Utility.getFileName(file);
+		String str = GnUtil.getJsonFromFile(file);
+		String fileName = GnUtil.getFileName(file);
 		boolean isAdmin = fileName.contains("admin");
 //		fileName = isAdmin ? Utility.isBlank(dumpFile) ? "zc_base_admin" : "zc_base" : dumpFile;
-		fileName = Utility.isBlank(dumpFile) ? isAdmin ? "zc_base_admin" : "zc_base" : dumpFile;
+		fileName = GnUtil.isBlank(dumpFile) ? isAdmin ? "zc_base_admin" : "zc_base" : dumpFile;
 		String separator = "Dumping routines for database'"+fileName+"'";
 		int sepPos = str.lastIndexOf(separator);
 		if (sepPos == -1) {

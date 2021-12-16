@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 /**
  * @author NARESH GUMMAGUTTA
@@ -80,7 +80,7 @@ public class TestNaarm {
 				if (checkNull(row.getCell(k)) != null) {
 					numOfRecs = DbUtils.getGeneratedKey(con,
 							"INSERT INTO `zc_naarm`.`wos_journal_data` (`data`,`temp_institution`, `temp_journal`) VALUES (?,?,?)",
-							Utility.removeSpaces(row.getCell(k).toString()), Utility.removeSpaces(row.getCell(v).toString()), Utility.removeSpaces(s.get(order)));
+							GnUtil.removeSpaces(row.getCell(k).toString()), GnUtil.removeSpaces(row.getCell(v).toString()), GnUtil.removeSpaces(s.get(order)));
 //				System.out.println(row.getCell(k).toString()+row.getCell(v).toString()+s.get(order));
 				}
 				k++;
@@ -94,6 +94,6 @@ public class TestNaarm {
 	}
 
 	public static String checkNull(Object o) {
-		return Utility.isBlank(o) ? null : Utility.removeSpaces(o.toString()) ;
+		return GnUtil.isBlank(o) ? null : GnUtil.removeSpaces(o.toString()) ;
 	}
 }

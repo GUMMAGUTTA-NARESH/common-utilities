@@ -30,7 +30,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 public class GnMap extends LinkedHashMap<String, Object> {
 //	private static Logger log = Logger.getLogger(GnMap.class.toString());
@@ -56,13 +56,13 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	public GnMap(Map<String, Object> x) {
 		super();
 		if (x != null)
-			putAll(Utility.jsonToGnMap(Utility.toJson(x)));
+			putAll(GnUtil.jsonToGnMap(GnUtil.toJson(x)));
 	}
 
 	public GnMap(Object x) {
 		super();
 		if (x != null)
-			putAll(Utility.jsonToGnMap(Utility.toJson(x)));
+			putAll(GnUtil.jsonToGnMap(GnUtil.toJson(x)));
 	}
 
 	public void putAllCustom(Map<String, Object> x) {
@@ -106,7 +106,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public String formatDate(String k, String sf, String df) {
-		return new SimpleDateFormat(df).format(Utility.getDate(getS(k), sf));
+		return new SimpleDateFormat(df).format(GnUtil.getDate(getS(k), sf));
 	}
 
 	public static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -246,7 +246,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 					try {
 						Object _o = obj.get(key);
 						if (_o instanceof List) {
-							if (Utility.isBlank(_o))
+							if (GnUtil.isBlank(_o))
 								return null;
 							else {
 								List _tl = ((List) _o);
@@ -270,7 +270,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 
 	public static Object[] haveArraySyntax(String k) {
 		Object[] res = new Object[] { false, k, -1 };
-		if (Utility.isBlank(k))
+		if (GnUtil.isBlank(k))
 			return res;
 		k = k.trim();
 		if (k.endsWith("]") && k.contains("[")) {
@@ -278,7 +278,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 			String index = k.substring(k.indexOf("[") + 1, k.indexOf("]"));
 			int intIndex = -1;
 			boolean flg = true;
-			if (Utility.isBlank(index)) {
+			if (GnUtil.isBlank(index)) {
 				intIndex = -2;
 			} else if ("*".equals(index.toString().trim())) {
 				intIndex = -3;
@@ -478,7 +478,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 							return put(key, new GnMap(), false);
 						else {
 							try {
-								return put(key, Utility.jsonToGnMap(value == null ? null : value.toString()), false);
+								return put(key, GnUtil.jsonToGnMap(value == null ? null : value.toString()), false);
 							} catch (Exception e) {
 								return put(key, null, false);
 							}
@@ -494,7 +494,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 							if (_o instanceof List) {
 								String spKey = "";
 								while (keyTokens.hasMoreTokens()) {
-									spKey = (Utility.isBlank(spKey) ? "" : spKey + keyDelimiter) + keyTokens.nextToken();
+									spKey = (GnUtil.isBlank(spKey) ? "" : spKey + keyDelimiter) + keyTokens.nextToken();
 								}
 								List _ooLi = (List) _o;
 								for (int _ooIdx = 0; _ooIdx < _ooLi.size(); _ooIdx++) {
@@ -552,7 +552,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public boolean isBlank(String k, boolean custom) {
-		return Utility.isBlank(get(k, custom));
+		return GnUtil.isBlank(get(k, custom));
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -571,7 +571,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 					try {
 						Object _o = obj.get(key);
 						if (_o instanceof List) {
-							if (Utility.isBlank(_o))
+							if (GnUtil.isBlank(_o))
 								break;
 							else {
 								List _tl = ((List) _o);
@@ -593,11 +593,11 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public String getTitleCase(String key, boolean custom) {
-		return Utility.toTitleCase(getS(key, custom));
+		return GnUtil.toTitleCase(getS(key, custom));
 	}
 
 	public String getSentenceCase(String key, boolean custom) {
-		return Utility.toSentenceCase(getS(key, custom));
+		return GnUtil.toSentenceCase(getS(key, custom));
 	}
 
 	public String getUpperCase(String key, boolean custom) {
@@ -613,19 +613,19 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public Date getDateTime(String k, boolean custom) {
-		return Utility.getDateTime(getS(k, custom));
+		return GnUtil.getDateTime(getS(k, custom));
 	}
 
 	public Date getDate(String k, boolean custom) {
-		return Utility.getDate(getS(k, custom));
+		return GnUtil.getDate(getS(k, custom));
 	}
 
 	public Date getTime(String k, boolean custom) {
-		return Utility.getTime(getS(k, custom));
+		return GnUtil.getTime(getS(k, custom));
 	}
 
 	public Integer getIo(String k, boolean custom) {
-		return Utility.parseInt(get(k, custom));
+		return GnUtil.parseInt(get(k, custom));
 	}
 
 	public int getI(String k, boolean custom) {
@@ -634,7 +634,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public Double getDo(String k, boolean custom) {
-		return Utility.parseDouble(get(k, custom));
+		return GnUtil.parseDouble(get(k, custom));
 	}
 
 
@@ -644,7 +644,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public Boolean getBo(String k, boolean custom) {
-		return Utility.parseBoolean(get(k, custom));
+		return GnUtil.parseBoolean(get(k, custom));
 	}
 
 	public boolean getB(String k, boolean custom) {
@@ -653,25 +653,25 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public final String toJson() {
-		return Utility.toJson(this);
+		return GnUtil.toJson(this);
 	}
 
 	public String toYml() {
-		return Utility.toYml(this);
+		return GnUtil.toYml(this);
 	}
 
 	public String getJson(String k, boolean custom) {
 		if (get(k, custom) == null)
 			return "{}";
 		else
-			return Utility.toJson(get(k, custom));
+			return GnUtil.toJson(get(k, custom));
 	}
 
 	public String getYml(String k, boolean custom) {
 		if (get(k, custom) == null)
 			return "";
 		else
-			return Utility.toYml(get(k, custom));
+			return GnUtil.toYml(get(k, custom));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -734,7 +734,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 			try {
 				putValue(key, value);
 			} catch (Exception e) {
-				System.out.println(Utility.getStackTrace(e));
+				System.out.println(GnUtil.getStackTrace(e));
 			}
 		} else {
 			try {
@@ -779,7 +779,7 @@ public class GnMap extends LinkedHashMap<String, Object> {
 	}
 
 	public boolean hasData(String k, boolean custom) {
-		return !Utility.isBlank(get(k, custom));
+		return !GnUtil.isBlank(get(k, custom));
 	}
 
 	public Object get(String key) {
@@ -812,15 +812,15 @@ public class GnMap extends LinkedHashMap<String, Object> {
 
 	public String getNullIfStrIsBlank(String k) {
 		String s = getS(k);
-		return Utility.isBlank(s) ? null : s;
+		return GnUtil.isBlank(s) ? null : s;
 	}
 
 	public String getStrAndTruncate(String k, int len) {
-		return Utility.truncate(getS(k), len);
+		return GnUtil.truncate(getS(k), len);
 	}
 
 	public String getBlankStrIfNullAndTruncate(String k, int len) {
-		return Utility.truncate(getBlankStrIfNull(k), len);
+		return GnUtil.truncate(getBlankStrIfNull(k), len);
 	}
 
 	public String getBlankStrIfNull(String k) {
@@ -1029,10 +1029,10 @@ public class GnMap extends LinkedHashMap<String, Object> {
 						Double d = 0d;
 						if (x.get(fieldKey) == null) {
 							if (fieldKeyIfNull != null && x.get(fieldKeyIfNull) != null) {
-								d = Utility.parseDouble(x.get(fieldKeyIfNull));
+								d = GnUtil.parseDouble(x.get(fieldKeyIfNull));
 							}
 						} else {
-							d = Utility.parseDouble(x.get(fieldKey));
+							d = GnUtil.parseDouble(x.get(fieldKey));
 						}
 						sum += d;
 						break;
@@ -1042,10 +1042,10 @@ public class GnMap extends LinkedHashMap<String, Object> {
 				Double d = 0d;
 				if (x.get(fieldKey) == null || x.getD(fieldKey) == 0d) {
 					if (fieldKeyIfNull != null && x.get(fieldKeyIfNull) != null) {
-						d = Utility.parseDouble(x.get(fieldKeyIfNull));
+						d = GnUtil.parseDouble(x.get(fieldKeyIfNull));
 					}
 				} else {
-					d = Utility.parseDouble(x.get(fieldKey));
+					d = GnUtil.parseDouble(x.get(fieldKey));
 				}
 				sum += (d == null || d == 0) ? 0 : d;
 			}

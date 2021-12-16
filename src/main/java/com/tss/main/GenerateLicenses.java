@@ -9,7 +9,7 @@ import com.tss.files.FileOperations;
 import com.tss.service.GnMap;
 import com.tss.service.LicenseGenerator;
 import com.tss.service.Rsa;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 public class GenerateLicenses {
 	public static final String TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\template.json";
@@ -27,13 +27,15 @@ public class GenerateLicenses {
 		res.put("destination", DESTINATION);
 		res.put("from", 1); //start client number
 		res.put("to", 1); // end client number
-		res.put("client", "naarm"); //client name
+		res.put("client", "theme"); //client name
 		res.put("isEncrypted", true); // if true encrypted licenses also created along with normal files
+//		res.put("host", "65.2.156.162"); v3.5
 		res.put("host", "");
 		res.put("port", "3406");
-		res.put("password", "The@1234");
+		res.put("password", "12345");
+//		res.put("password", "WmNATXlzcUwyMDIw"); v3.5
 		
-		List<String> clients = Utility.readFileIntoList("C:\\Users\\G NARESH\\Desktop\\clients.txt");
+		List<String> clients = GnUtil.readFileIntoList("C:\\Users\\G NARESH\\Desktop\\clients.txt");
 		LicenseGenerator.getLicenses(res);
 		System.out.println(EncryptDecryptUtil.decrypt(null));
 		
@@ -68,22 +70,22 @@ public class GenerateLicenses {
 //		System.out.println(FileOperations.moveFiles(path, source, false));
 //		System.out.println(FileOperations.transferFiles(path, sourceExe, false));
 		String s = "G:\\InputFiles\\Test.xlsx";
-		System.out.println(Utility.getFileInfo(s, false));
-		System.out.println(Utility.getFileInfo(s, true));
-		System.out.println(Utility.convertMapToSet(map, false));
+		System.out.println(GnUtil.getFileInfo(s, false));
+		System.out.println(GnUtil.getFileInfo(s, true));
+		System.out.println(GnUtil.convertMapToSet(map, false));
 		System.out.println(FileOperations.getFileExtensions(path));
 		System.out.println(FileOperations.getCreationTime(path,false));
 		System.out.println(FileOperations.getExtensionsByTime(path));
-		System.out.println(Utility.isValidPanCard("AYRPN7272Q"));
-		System.out.println(Utility.isValidPassport("Test13"));
+		System.out.println(GnUtil.isValidPanCard("AYRPN7272Q"));
+		System.out.println(GnUtil.isValidPassport("Test13"));
 		Rsa rsa = new Rsa();
 		byte[] enc = rsa.encrypt("GUMMAGUTTA NARESH".getBytes());
-		System.out.println(Utility.bytesToString(enc));
+		System.out.println(GnUtil.bytesToString(enc));
 		
 		byte[] dec = rsa.decrypt(enc);
 		System.out.println(new String(dec));
-		System.out.println(Utility.bytesToString(dec));
-		System.out.println(Utility.removeSpecialChars(Utility.bytesToString(enc)));
+		System.out.println(GnUtil.bytesToString(dec));
+		System.out.println(GnUtil.removeSpecialChars(GnUtil.bytesToString(enc)));
 		}
 	}
 

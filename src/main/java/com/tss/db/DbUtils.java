@@ -31,14 +31,14 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.tss.service.DbExcelUtils;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 
 
 public class DbUtils {
 	public static final char GRAVE = '`';
 	public static String encloseGrave(String s) {
-		return (Utility.isBlank(s))? null:GRAVE + s.trim() + GRAVE;
+		return (GnUtil.isBlank(s))? null:GRAVE + s.trim() + GRAVE;
 	}
 	public static Connection getConnection(String host, int port, String schema, String userName, String password)
 			throws ClassNotFoundException, SQLException {
@@ -114,7 +114,7 @@ public class DbUtils {
 	}
 
 	public static String generateInsertQuery(String schemaName, String tableName, String[] columns) {
-		String tableWithSchema = (Utility.isBlank(schemaName) ? encloseGrave(tableName): (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
+		String tableWithSchema = (GnUtil.isBlank(schemaName) ? encloseGrave(tableName): (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
 		String columnNames = "", placeHolders = "";
 		for (String c : columns) {
 			columnNames += encloseGrave(c) + ",";
@@ -125,7 +125,7 @@ public class DbUtils {
 		return "INSERT INTO " + tableWithSchema + " (" + columnNames + ") VALUES (" + placeHolders + ");";
 	}
 	public static String generateUpdateQuery(String schemaName, String tableName, String[] columns,int id) {
-		String tableWithSchema = (Utility.isBlank(schemaName) ? encloseGrave(tableName): (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
+		String tableWithSchema = (GnUtil.isBlank(schemaName) ? encloseGrave(tableName): (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
 		String columnNames = "";
 		for (String c : columns) {
 			columnNames += encloseGrave(c) + "=? ,";
@@ -167,16 +167,16 @@ public class DbUtils {
 		return fromDb;
 	}
 	public static String getEncodedString(String password) {
-		if(Utility.isBlank(password)) return null;
+		if(GnUtil.isBlank(password)) return null;
 		else return Base64.getEncoder().encodeToString(password.getBytes());
 	}
 
 	public static String getDecodedString(String encryptedpassword) {
-		if(Utility.isBlank(encryptedpassword)) return null;
+		if(GnUtil.isBlank(encryptedpassword)) return null;
 		else return new String(Base64.getMimeDecoder().decode(encryptedpassword));
 	}
 	public static String generateFindAllQuery(String schemaName, String tableName, String[] columns) {
-		String tableWithSchema = (Utility.isBlank(schemaName) ? encloseGrave(tableName)
+		String tableWithSchema = (GnUtil.isBlank(schemaName) ? encloseGrave(tableName)
 				: (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
 		String columnNames = "";
 		for (String c : columns) {
@@ -186,7 +186,7 @@ public class DbUtils {
 		return "SELECT " + columnNames + " FROM " + tableWithSchema + ";";
 	}
 	public static String generateFindQuery(String schemaName, String tableName, String[] columns) {
-		String tableWithSchema = (Utility.isBlank(schemaName) ? encloseGrave(tableName)
+		String tableWithSchema = (GnUtil.isBlank(schemaName) ? encloseGrave(tableName)
 				: (encloseGrave(schemaName) + "." + encloseGrave(tableName)));
 		String columnNames = "";
 		for (String c : columns) {
@@ -196,7 +196,7 @@ public class DbUtils {
 		return "SELECT " + columnNames + " FROM " + tableWithSchema + " WHERE pk_id=?;";
 	}
 	public static String convertToBase64(java.sql.Blob blob) throws Exception {
-		if(Utility.isBlank(blob)) return "";
+		if(GnUtil.isBlank(blob)) return "";
 		 InputStream inputStream = blob.getBinaryStream();
          ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
          byte[] buffer = new byte[4096];
@@ -340,7 +340,7 @@ public class DbUtils {
 		Statement statement = conn.createStatement();
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		XSSFSheet sheet = workbook.createSheet("Research Areas");
-		String[] cols = Utility.fileDataToStrArr("C:\\Users\\G NARESH\\Downloads\\narmdata.txt");
+		String[] cols = GnUtil.fileDataToStrArr("C:\\Users\\G NARESH\\Downloads\\narmdata.txt");
 		XSSFRow row = null;
 		XSSFCell cell = null;
 		int rowNum = 0;
