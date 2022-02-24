@@ -1,6 +1,8 @@
 package com.tss.service;
 
 public class Constants {
+	
+	public static final String LOCALHOST_TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\localTemplate.json";
 	public static final String QUERY = "";
 	String query = ("CREATE TABLE $table$ (" +  
             "pk_id INT AUTO INCREMENT NOT NULL, " + 

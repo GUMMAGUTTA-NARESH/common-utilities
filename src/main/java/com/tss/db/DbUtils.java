@@ -219,6 +219,7 @@ public class DbUtils {
 	
 	public static boolean getResultset(Connection connection, String sql) throws SQLException {
 		PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM "+sql);
+//		preparedStatement.addBatch(arg0);
 		ResultSet resultSet = preparedStatement.executeQuery();
 		ResultSetMetaData metadata = resultSet.getMetaData();
 		int columnCount = metadata.getColumnCount();

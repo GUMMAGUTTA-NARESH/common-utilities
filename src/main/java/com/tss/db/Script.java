@@ -67,13 +67,13 @@ public class Script {
 		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
 //		DbUtils.execute("SET SQL_SAFE_UPDATES = 0;", connection);
 //		DbUtils.execute("SET FOREIGN_KEY_CHECKS = 0;", connection);
-		for(Map<String, Object> maps : listMap) {
-			for(Object s : maps.values()) {
+		for(Map<String, Object> map : listMap) {
+			for(Object s : map.values()) {
 				String _q = s.toString();
 				if(isTruncate) {
 					DbUtils.execute(_q, connection);
 					System.out.println(_q);
-				}else if(DbUtils.getResultset(connection, _q.substring(_q.indexOf("FROM")+5, _q.indexOf("WHERE")))){
+				}else {//if(DbUtils.getResultset(connection, _q.substring(_q.indexOf("FROM")+5, _q.indexOf("WHERE")))){
 					 DbUtils.execute(_q, connection);
 				}
 			}

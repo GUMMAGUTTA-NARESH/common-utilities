@@ -82,8 +82,8 @@ public class GnUtil {
 		return false;
 	}
 
-	public static boolean hasNotBlank(Object o) {
-		return isBlank(o);
+	public static boolean hasData(Object o) {
+		return !isBlank(o);
 	}
 	
 	public static boolean isValidPath(String path) throws Exception {
@@ -100,25 +100,31 @@ public class GnUtil {
 	}
 	private static String getDirectory(String folder,int from, int to, boolean flag, String folderName) {
 //		return (flag) ? folder+from+"to"+to : folder+getTime();
-		return (!flag) ?  folder+getTime() : !isBlank(folderName) ? folderName : folder+from+"to"+to;
+//		return (!flag) ?  folder+getTime() : !isBlank(folderName) ? folderName : folder+from+"to"+to;
+		return flag ? (!isBlank(folderName) ? folderName : folder+from+"to"+to) : folder+getTime();
 	}
 	//this method is used to create the folders based on dates ex: used in copy the downloaded files
 	public static String getDirectory(String dir, String folderName) {
 		if (isBlank(dir)) return "Path is Empty";
 		String _path = getDirectory(null, 0, 0, true, folderName);
 		File theDir = new File(dir+"\\"+_path);
-		return theDir.exists() ? "Folder is Already Exists": theDir.mkdir() ? theDir.getAbsolutePath(): "Failed"; 
+		return theDir.exists() ? theDir.getAbsolutePath(): theDir.mkdir() ? theDir.getAbsolutePath(): "Failed"; 
 	}
 	
 	//this is for generating licenses files
-	public static String getDirectory(String dir, String folder, boolean flag, int from, int to) {
+	public static String getDirectory(String dir, String folder, boolean flag, int from, int to, String folderName) {
 		if (isBlank(dir)) return "Path is Empty";
 //		flag = (from <= 0 || to <= 0) ? false :true;
 //		String _path =(flag) ? dir+"\\"+getDirectory(folder, from, to) : dir+"\\"+folder+getTime();
-		String _path = getDirectory(folder, from, to, flag,null);
+		String _path = getDirectory(folder, from, to, flag,folderName);
 		File theDir = new File(dir+"\\"+_path);
-		return theDir.exists() ? "Folder is Already Exists": theDir.mkdir() ? theDir.getAbsolutePath(): "Failed"; 
+		return theDir.exists() ? theDir.getAbsolutePath(): theDir.mkdir() ? theDir.getAbsolutePath(): "Failed"; 
 	}
+	
+	public static String getClientNameFormat(String client) {
+		client = removeSpaces(client);
+		return isBlank(client) ? "" : client.replaceAll(" ", "_");
+ 	}
 	
 	public static String getStringCases(String s, boolean flag) {
 		if(isBlank(s)) return "Empty String";
@@ -384,6 +390,8 @@ public class GnUtil {
 	
 	
 	public static void main(String[] args) {
+		System.out.println(isValidPhone("+919493244696"));
+		System.out.println(getClientNameFormat("base client"));
 		System.out.println(isExcel("D://naresh.xls"));
 		System.out.println(isValidPhone("5542706937"));
 		System.out.println(formatDate("2021-05-08", "dd-MM-yy"));
@@ -660,5 +668,11 @@ public class GnUtil {
         }
         bufferedReader.close();
         return lines.toArray(new String[lines.size()]);
+	}
+	
+	public static GnMap toGnMap(Map<String,Object> map) {
+		GnMap res=new GnMap();
+		res.putAllCustom(map);
+		return res;
 	}
 }

@@ -43,6 +43,9 @@ public class ScriptMain {
 //		
 		String updateAppUser = "UPDATE {{schema}}.app_user SET `first_name` = NULL,`email` = NULL, `password` = NULL, `phone` = NULL, `last_login` = NULL, `last_login_ip` = NULL, `last_login_agent` = NULL WHERE (`pk_id` = '1');";
 		updateAppUser =updateAppUser.replace("{{schema}}", SCHEMA);
+		String uQ = "DELETE  FROM  {{schema}}.app_user where user_code NOT IN ( 'USR-1' ,'USR-2','USR-3')";
+		String uQQ = "DELETE  FROM  {{schema}}.user where user_code NOT IN ( 'USR-1' ,'USR-2','USR-3')";
+		
 		DbUtils.execute(updateAppUser,connection);
 		DbUtils.getCloseConnection(connection);
 		
@@ -50,5 +53,19 @@ public class ScriptMain {
 //		script.dbImport("127.0.0.1", USER_NAME, PASSWORD, SCHEMA, "G:\\InputFiles\\Dbs\\Base script dbs v35\\zc_v35_base_admin.sql");
 		script.readSql("G:\\InputFiles\\Dbs\\Base script dbs v35\\16th script\\zc_v35_base_admin.sql",null);
 		System.out.println("Done");
+		
+		//TODO:Need to add the query
+		//PK_ID alternation ex: 1,2,3,6,7,15 out: 1,2,3,4,5,6,7
+		//SET @count = 0;
+		//UPDATE zc_base_admin.app_api_fields SET `app_api_fields`.`pk_id` = @count:= @count + 1;
+		
+		/**
+		 *  SET @count = 0;
+		UPDATE zc_base_admin.app_api_fields SET `app_api_fields`.`pk_id` = @count:= @count + 1;
+                SELECT `AUTO_INCREMENT`
+FROM  INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'zc_base_admin'
+AND   TABLE_NAME   = 'app_api';
+		 */
 	}
 }

@@ -28,7 +28,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.tss.db.DbUtils;
-import com.tss.util.Utility;
+import com.tss.util.GnUtil;
 
 public class DbExcelUtils {
 	public static void createDb() {
@@ -63,14 +63,14 @@ public class DbExcelUtils {
 	public static List<String> getColumnsList(Map<Integer,Object> map, boolean flag){
 		List<String> list = new ArrayList<String>();
 		for (Integer key: map.keySet()) { 
-			if(flag) list.add(Utility.dbColumn(map.get(key).toString()));
+			if(flag) list.add(GnUtil.dbColumn(map.get(key).toString()));
 			else list.add(map.get(key).toString());
 		} 
 		return list;
 	}
 	@SuppressWarnings({ "unused", "resource" })
 	public static void insert(String file, Connection connection, String table, boolean flag) throws Exception {
-		if(Utility.isBlank(file) || Utility.isBlank(connection)) throw new Exception("file or connection Failed");
+		if(GnUtil.isBlank(file) || GnUtil.isBlank(connection)) throw new Exception("file or connection Failed");
 		try {
 			FileInputStream inpStream = new FileInputStream(new File(file));
 			XSSFWorkbook workbook = new XSSFWorkbook(inpStream);
@@ -163,7 +163,7 @@ public class DbExcelUtils {
 	}
 
 	public static String queryBuilder(String file, String scheme, boolean flag) throws Exception {
-		if(!Utility.isValidPath(file)) return "Given File is not Valid";
+		if(!GnUtil.isValidPath(file)) return "Given File is not Valid";
 		if(scheme == null || scheme == "") {
 			scheme = "default";
 		}
@@ -172,12 +172,12 @@ public class DbExcelUtils {
 		StringBuilder builder = new StringBuilder();
 		List<String> query = new ArrayList<String>(cols.size());
 		for(int i = 0; i < cols.size(); i++) {
-			query.add(Utility.encloseGrave(cols.get(i))+" "+dataTypes.get(i));
+			query.add(GnUtil.encloseGrave(cols.get(i))+" "+dataTypes.get(i));
 		}
 		query.forEach(builder::append);
 		String s = builder.substring(0, builder.length()-1);
-		String qry =  (flag) ? Constants.CREATE_TABLE_DEFAULTS.replace("{{query}}", s).replace("{{table}}", Utility.encloseGrave(Utility.getFileName(file.toLowerCase()))).replace("{{scheme}}", Utility.encloseGrave(scheme)) 
-				: Constants.CREATE_TABLE.replace("{{query}}", s).replace("{{table}}", Utility.encloseGrave(Utility.getFileName(file.toLowerCase()))).replace("{{scheme}}", Utility.encloseGrave(scheme));
+		String qry =  (flag) ? Constants.CREATE_TABLE_DEFAULTS.replace("{{query}}", s).replace("{{table}}", GnUtil.encloseGrave(GnUtil.getFileName(file.toLowerCase()))).replace("{{scheme}}", GnUtil.encloseGrave(scheme)) 
+				: Constants.CREATE_TABLE.replace("{{query}}", s).replace("{{table}}", GnUtil.encloseGrave(GnUtil.getFileName(file.toLowerCase()))).replace("{{scheme}}", GnUtil.encloseGrave(scheme));
 	return ("default".equalsIgnoreCase(scheme)) ? qry.replace("`default`.", ""): qry;
 	}
 	

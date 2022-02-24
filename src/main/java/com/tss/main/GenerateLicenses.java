@@ -22,6 +22,7 @@ public class GenerateLicenses {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
+//		Map<String, Object> res = new LinkedHashMap<String, Object>();
 		GnMap res = new GnMap();
 		res.put("template", LOCALHOST_TEMPLATE);
 		res.put("destination", DESTINATION);
@@ -34,10 +35,10 @@ public class GenerateLicenses {
 		res.put("port", "3406");
 		res.put("password", "12345");
 //		res.put("password", "WmNATXlzcUwyMDIw"); v3.5
-		
+		System.out.println(GnUtil.toGnMap(res));
 		List<String> clients = GnUtil.readFileIntoList("C:\\Users\\G NARESH\\Desktop\\clients.txt");
-		LicenseGenerator.getLicenses(res);
-		System.out.println(EncryptDecryptUtil.decrypt(null));
+		LicenseGenerator.getLicenses(res,clients);
+//		System.out.println(EncryptDecryptUtil.decrypt(null));
 		
 //		LicenseGenerator.getLicenses(LOCALHOST_TEMPLATE, DESTINATION, 1, 15, "abc",true);
 //		System.out.println(Utility.isExcel("acb.csv"));
