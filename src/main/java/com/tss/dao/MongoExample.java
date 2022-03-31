@@ -6,12 +6,7 @@ package com.tss.dao;
 
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import static com.mongodb.client.model.Filters.eq;
 
 import org.bson.Document;
 
@@ -20,7 +15,6 @@ import com.mongodb.ConnectionString;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientURI;
@@ -30,12 +24,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
-import com.mongodb.client.model.Collation;
-
-import static com.mongodb.client.model.Filters.eq;
-
 import com.tss.service.GnMap;
-import com.tss.util.GnUtil;
 
 /**
  * @author NARESH GUMMAGUTTA

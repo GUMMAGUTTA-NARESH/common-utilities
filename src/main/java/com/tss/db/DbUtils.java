@@ -93,6 +93,17 @@ public class DbUtils {
 		PreparedStatement preparedStatement = connection.prepareStatement(sql);
 		 preparedStatement.executeUpdate();
 	}
+	
+	public static int[] batchUpdate(Connection conn, List<String> queries) throws SQLException {
+		Statement stm = conn.createStatement();
+		for(String q : queries) {
+			stm.addBatch(q);
+		}
+		int[] status = stm.executeBatch();
+		stm.close();
+		return status;
+	}
+	
 	public static int createTable(Connection connection, String file,String schema, boolean wantDefaults) throws Exception {
 		String sql = DbExcelUtils.queryBuilder(file, schema, wantDefaults);
 		PreparedStatement statement = connection.prepareStatement(sql);

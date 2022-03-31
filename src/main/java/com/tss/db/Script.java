@@ -80,6 +80,40 @@ public class Script {
 		}
 	}
 	
+	public List<String> polishDatabase(Connection connection,boolean isTruncate, String schema) throws SQLException {
+		List<String> queries = new ArrayList<String>();
+		String query = isTruncate ? Constants.TRUNCATE:Constants.DELETE;
+		query = query.replace("{{schema}}", schema);
+		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
+		for(Map<String, Object> map : listMap) {
+			for(Object s : map.values()) {
+				String _q = s.toString();
+				if(isTruncate) {
+					queries.add(_q);
+//					System.out.println(_q);
+				}else {//if(DbUtils.getResultset(connection, _q.substring(_q.indexOf("FROM")+5, _q.indexOf("WHERE")))){
+					queries.add(_q);
+				}
+			}
+		}
+		return queries;
+	}
+	
+	public List<String> getAutoIncreatmentQueries(Connection connection, String schema) throws SQLException {
+		List<String> queries = new ArrayList<String>();
+		String query = Constants.AUTO_INCREMENT;
+		query = query.replace("{{schema}}", schema);
+		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
+		for(Map<String, Object> map : listMap) {
+			for(Object s : map.values()) {
+				String _q = s.toString();
+					queries.add(_q);
+//					System.out.println(_q);
+				}
+			}
+		return queries;
+	}
+	
 	public void export(String userName, String password, String host, File filePath, int port, String schema) throws IOException {
 		// mysqldump -u admin -p12345 -h127.0.0.1 -P3306 --events --routines --comments import > fileName.sql
 		Runtime rt = Runtime.getRuntime();
