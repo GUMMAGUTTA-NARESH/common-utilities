@@ -99,7 +99,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.12.4</version>
+			<version>2.12.6.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 		<dependency>
@@ -184,7 +184,7 @@
 		<dependency>
 			<groupId>com.google.oauth-client</groupId>
 			<artifactId>google-oauth-client</artifactId>
-			<version>1.20.0</version>
+			<version>1.33.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client-java6 -->
 		<dependency>
