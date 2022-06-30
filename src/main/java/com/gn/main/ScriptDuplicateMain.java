@@ -1,12 +1,10 @@
 package com.gn.main;
 
-import java.io.File;
 import java.sql.Connection;
 import java.util.List;
 
 import com.gn.db.DbUtils;
 import com.gn.db.Script;
-import com.gn.service.Constants;
 
 public class ScriptDuplicateMain {
 	static final String USER_NAME = "admin";

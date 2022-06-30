@@ -1,9 +1,12 @@
 package com.gn.util;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,9 +16,11 @@ import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +31,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import org.apache.commons.io.FilenameUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -42,6 +53,7 @@ public class GnUtil {
 	private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z]+(\\.[A-Za-z]+)*(\\.[A-Za-z]{2})$";
 	private static final String PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{5,12})";
 	private static final String PHONE_REGEX = "^(\\+91?)?[6789]{1}\\d{9}$";
+	private static Cipher cipher;
 	
 	public static boolean isBlank(Object o) {
 		if (o == null)
@@ -470,6 +482,11 @@ public class GnUtil {
 	public static String getDateTimeString(java.util.Date date) {
 		return getDateTimeString(date,"yyyy-MM-dd HH:mm:ss");
 	}
+	
+	public static String getCurrentDateTime() {
+		return getDateTimeString(new Date(),"yyMMdd_HHmm");
+	}
+	
 	public static Date getDateTime(String date, String format) { 
 		return getDate(date,format);
 	}
@@ -685,5 +702,100 @@ public class GnUtil {
 		GnMap res=new GnMap();
 		res.putAllCustom(map);
 		return res;
+	}
+	
+	public static void zip(String path, boolean zipInFolder,File... folderFiles) throws Exception {
+		log.info(path);
+		for(File f:folderFiles) {
+			log.info("File Path..:"+f.getPath());
+		}
+		File folderPath = new File(path);
+		log.info("---------folder path(Zip) : "+folderPath);
+		if (folderPath.exists()) {
+			String zipDirName = folderPath + ".zip";
+			FileOutputStream fos = new FileOutputStream(zipDirName);
+			ZipOutputStream zos = new ZipOutputStream(fos);
+			if (folderFiles.length == 0) folderFiles = folderPath.listFiles();
+			if (folderPath.isDirectory()) {
+				if(zipInFolder) zipDirectory(folderPath, folderPath.getName(), zos, folderFiles);
+				else zipDirectory(folderPath, "", zos, folderFiles); 
+			} else {
+				zipFile(folderPath, zos);
+			}
+			zos.flush();
+			zos.close();
+		}
+		else throw new Exception("There is no such file or directory");
+	}
+	
+	@SuppressWarnings({ "resource", "unused" })
+	private static void zipDirectory(File folder, String parentFolder, ZipOutputStream zos,File... files) throws FileNotFoundException, IOException {
+        for (File file : files) {
+            if (file.isDirectory()) {
+                zipDirectory(file, parentFolder + File.separator + file.getName(), zos, file.listFiles());
+                continue;
+            }
+            log.info("--------folder files---------- : "+file);
+            zos.putNextEntry(new ZipEntry(parentFolder + File.separator + file.getName()));
+			BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+			long bytesRead = 0;
+			byte[] bytesIn = new byte[1024];
+			int read = 0;
+			while ((read = bis.read(bytesIn)) != -1) {
+				zos.write(bytesIn, 0, read);
+				bytesRead += read;
+			}
+			zos.closeEntry();
+        }
+    }
+    
+	@SuppressWarnings({ "unused", "resource" })
+	private static void zipFile(File file, ZipOutputStream zos) throws FileNotFoundException, IOException {
+		zos.putNextEntry(new ZipEntry(file.getName()));
+		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+		long bytesRead = 0;
+		byte[] bytesIn = new byte[1024];
+		int read = 0;
+		while ((read = bis.read(bytesIn)) != -1) {
+			zos.write(bytesIn, 0, read);
+			bytesRead += read;
+		}
+		zos.closeEntry();
+	}
+	
+	public static SecretKey getSecretKey() throws NoSuchAlgorithmException {
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+	     keyGenerator.init(128); // block size is 128bits
+	     return keyGenerator.generateKey();
+	     
+	}
+
+	public static String encrypt(String plainText) throws Exception {
+		return Base64.getEncoder().encodeToString(plainText.getBytes());
+	}
+	
+	public static String decrypt(String encryptedData) throws Exception {
+		return new String(Base64.getDecoder().decode(encryptedData));
+	}
+	
+	/**
+	 * For Encrypt and Decrypt with AES we have to pass same secret Key for encrypt and decrypt
+	 * @param plainText
+	 * @param secretKey
+	 * @return
+	 * @throws Exception
+	 * @author G NARESH
+	 */
+	public static String encrypt(String plainText, SecretKey secretKey) throws Exception {
+		cipher = Cipher.getInstance("AES");
+		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+		return Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes()));
+	}
+
+	public static String decrypt(String encryptedText, SecretKey secretKey) throws Exception {
+		cipher = Cipher.getInstance("AES");
+		byte[] encryptedTextByte = Base64.getDecoder().decode(encryptedText);
+		cipher.init(Cipher.DECRYPT_MODE, secretKey);
+		return new String(cipher.doFinal(encryptedTextByte));
 	}
 }

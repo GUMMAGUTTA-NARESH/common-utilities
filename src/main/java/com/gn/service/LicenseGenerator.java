@@ -1,6 +1,8 @@
 package com.gn.service;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,13 +67,13 @@ public class LicenseGenerator {
 			data = GnUtil.isBlank(reqData.getS("host")) ? data : data.replace("$host$", reqData.getS("host")).replace("$port$", reqData.getS("port")).replace("$pwd$", reqData.getS("password"));
 		for (int i = from; i <= to; i++) {
 			String fileName = (i < 10 && i != 0 && from != to) ? (client + "0" + i + ".zc_lic") : (client + (i<=0 || from == to ?"":i) + ".zc_lic");
-			File file = new File(filePath + "\\" + fileName);
+			File file = new File(filePath + File.separator + fileName);
 			file.createNewFile();
 //			String json = Utility.getJsonFromFile(reqData.getS("template")).replace("c$no$", client + (i<=0 || from == to ?"":i));
 			String json = data.replace("c$no$", client + (i<=0 || from == to ?"":i));
 			GnUtil.fileWriter(json, file);
 			if(isEncrypted) {
-				File encryptPath = new File(enc + "\\" + fileName);
+				File encryptPath = new File(enc + File.separator + fileName);
 				encryptPath.createNewFile();
 				String s = GnUtil.mapToJson(EncryptDecryptUtil.encrypt(json));
 				GnUtil.fileWriter(s, encryptPath);
@@ -82,10 +84,22 @@ public class LicenseGenerator {
 	}
 		
 		public static void getLicenses(GnMap reqData, List<String> clients) throws Exception {
+			if(clients == null) {
+				getLicenses(reqData);
+			}
 			reqData.put("isSingleFolder", true);
 			for(String s: clients) {
 				reqData.put("client", s);
 				getLicenses(reqData);
 			}
 		}
+		
+		public static String getResource(String file) {
+			try {
+				return Paths.get(ClassLoader.getSystemClassLoader().getResource(file).toURI()).toString();
+			} catch (URISyntaxException e) {
+				return null;
+			}
+		}
+		
 }

@@ -2,7 +2,6 @@ package com.gn.db;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,14 +16,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -340,6 +335,7 @@ public class DbUtils {
 		workbook.close();
 	}
 	
+	@SuppressWarnings("unused")
 	private static List<String> getData(Connection conn, String query) throws Exception{
 		List<Map<String, Object>> headings = DbUtils.getMapList(conn, query);
 		List<String> headingsList = new ArrayList<String>();
@@ -348,6 +344,7 @@ public class DbUtils {
 		return headingsList;
 	}
 	
+	@SuppressWarnings("unused")
 	public static void insertDataFromDbToExcelForNaarmIt(String file, Connection conn, String query) throws Exception {
 		Statement statement = conn.createStatement();
 		XSSFWorkbook workbook = new XSSFWorkbook();

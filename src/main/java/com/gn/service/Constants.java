@@ -36,6 +36,18 @@ public class Constants {
 	public static final String MYSQL_PATH = "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin";
 	public static final String MYSQL_SHELL_PATH = "C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\";
 	
+	public static final String V35 = "zc_v35_";
+	public static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().indexOf("windows")>-1;
+	public static final String DB_BACKUP_BASE_PATH_WINDOWS = "G:\\InputFiles\\Dbs\\{{path}}";
+	public static final String DB_BACKUP_BASE_PATH_UBUNTU = "media/naresh/WORK/InputFiles/Dbs/{{path}}";
+	
+	//LocalHost Db Credentials
+	 public static final String MYSQL_HOST = "127.0.0.1";
+	 public static final String MYSQL_USER_NAME = "admin";
+	 public static final String MYSQL_PASSWORD = "12345";
+	 public static final int MYSQL_PORT = 3306;
+	 
+	
 	
 
 }

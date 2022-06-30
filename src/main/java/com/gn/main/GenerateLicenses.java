@@ -1,10 +1,11 @@
 package com.gn.main;
 
-import java.util.LinkedHashMap;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
-import com.gn.encryption.EncryptDecryptUtil;
 import com.gn.files.FileOperations;
 import com.gn.service.GnMap;
 import com.gn.service.LicenseGenerator;
@@ -12,32 +13,52 @@ import com.gn.service.Rsa;
 import com.gn.util.GnUtil;
 
 public class GenerateLicenses {
-	public static final String TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\template.json";
-	public static final String LOCALHOST_TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\localTemplate.json";
-	public static final String DESTINATION = "G:\\InputFiles\\Licenses";
-	public static final String TEMPLATE_INFO = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\template.json";
+//	public static final String TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\template.json";
+//	public static final String LOCALHOST_TEMPLATE = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\localTemplate.json";
+//	public static final String DESTINATION = "G:\\InputFiles\\Licenses";
+//	public static final String TEMPLATE_INFO = "C:\\javaworkplaces\\javaworkproject\\utilities-common\\src\\main\\resources\\template.json";
+
 	/**
 	 * @author GUMMAGUTTA NARESH
 	 * @param args
+	 * @throws URISyntaxException 
 	 * @throws Exception
 	 */
+	public static final String TEMPLATE = "template.json";
+	public static final String LOCALHOST_TEMPLATE = "localTemplate.json";
+	public static final String TEMPLATE_INFO = "template.json";
+	public static final String DESTINATION ="/media/naresh/WORK/InputFiles/Licenses";
+	public static final String CLIENTS = DESTINATION + File.separator+"clients.txt";
+	
+	
+	private static String getResource(String file) {
+		try {
+			return Paths.get(ClassLoader.getSystemClassLoader().getResource(file).toURI()).toString();
+		} catch (URISyntaxException e) {
+			return null;
+		}
+	}
+	
 	public static void main(String[] args) throws Exception {
-//		Map<String, Object> res = new LinkedHashMap<String, Object>();
+		String localhostTemplate = getResource(LOCALHOST_TEMPLATE);
+		// String destination = getResource(DESTINATION);
+		String template = getResource(TEMPLATE);
+		String templateInfo = getResource(TEMPLATE_INFO);
 		GnMap res = new GnMap();
-		res.put("template", LOCALHOST_TEMPLATE);
+		res.put("template", localhostTemplate);
 		res.put("destination", DESTINATION);
 		res.put("from", 1); //start client number
 		res.put("to", 1); // end client number
 		res.put("client", "theme"); //client name
-		res.put("isEncrypted", true); // if true encrypted licenses also created along with normal files
+		res.put("isEncrypted", false); // if true encrypted licenses also created along with normal files
 //		res.put("host", "65.2.156.162"); v3.5
 		res.put("host", "");
 		res.put("port", "3406");
 		res.put("password", "12345");
 //		res.put("password", "WmNATXlzcUwyMDIw"); v3.5
 		System.out.println(GnUtil.toGnMap(res));
-		List<String> clients = GnUtil.readFileIntoList("C:\\Users\\G NARESH\\Desktop\\clients.txt");
-		LicenseGenerator.getLicenses(res,clients);
+		List<String> clients = GnUtil.readFileIntoList(CLIENTS);
+		LicenseGenerator.getLicenses(res,null);
 //		System.out.println(EncryptDecryptUtil.decrypt(null));
 		
 //		LicenseGenerator.getLicenses(LOCALHOST_TEMPLATE, DESTINATION, 1, 15, "abc",true);
@@ -63,8 +84,8 @@ public class GenerateLicenses {
 //		System.out.println(Profile.getMyIp());
 //		System.out.println(Profile.getMyPhone());
 		String path = "C:\\Users\\G NARESH\\Downloads";
-		String source = "E:\\All Downloads\\test";
-		String sourceExe = "E:\\All Downloads\\extensions";
+//		String source = "E:\\All Downloads\\test";
+//		String sourceExe = "E:\\All Downloads\\extensions";
 //		System.out.println(FileOperations.getFiles(path));
 		Map<String, Object> map =  FileOperations.getCreationTime(path,false);
 //		System.out.println(FileOperations.createFolders(sourceExe, path, true));
