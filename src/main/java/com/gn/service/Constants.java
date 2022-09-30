@@ -47,6 +47,16 @@ public class Constants {
 	 public static final String MYSQL_PASSWORD = "12345";
 	 public static final int MYSQL_PORT = 3306;
 	 
+	 //Data migration Queries
+	 public static final String GET_STATE = "SELECT pk_id FROM state WHERE code=?";
+	 public static final String INSERT_STATE = "INSERT INTO state (name, code, status) VALUES(?,?,?)";
+	 public static final String GET_DISTRICT = "SELECT pk_id FROM district WHERE code=?";
+	 public static final String INSERT_DISTRICT = "INSERT INTO district (name, code, state, status) VALUES(?,?,?,?)";
+	 public static final String GET_CITY = "SELECT pk_id FROM city WHERE code=?";
+	 public static final String INSERT_CITY = "INSERT INTO city (name, code, district ,status) VALUES(?,?,?,?)";
+	 public static final String GET_PINCODE = "SELECT pk_id FROM postal_code WHERE code=?";
+	 public static final String INSERT_PINCODE = "INSERT INTO postal_code (name, code, city, status) VALUES(?,?,?,?)";
+	 
 	
 	
 

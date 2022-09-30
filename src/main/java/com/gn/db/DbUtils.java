@@ -26,6 +26,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.gn.service.DbExcelUtils;
+import com.gn.service.GnMap;
 import com.gn.util.GnUtil;
 
 
@@ -51,7 +52,12 @@ public class DbUtils {
 			connection.close();
 		}
 	}
-	public static Map<String, Object> get(Connection conn, String sql, Object... args) throws SQLException {
+	
+	public static Map<String, Object> get1(Connection conn, String sql, Object... args) throws SQLException {
+		return (getMapList(conn, sql, args) != null) ? getMapList(conn, sql, args).get(0): null;
+	}
+	
+	public static GnMap get(Connection conn, String sql, Object... args) throws SQLException {
 		return (getMapList(conn, sql, args) != null) ? getMapList(conn, sql, args).get(0): null;
 	}
 	
@@ -64,7 +70,7 @@ public class DbUtils {
 		return preStmt;
 	}
 	
-	public static List<Map<String, Object>> getMapList(Connection conn, String sql, Object... args)
+	public static List<Map<String, Object>> getMapList1(Connection conn, String sql, Object... args)
 			throws SQLException {
 		PreparedStatement preStmt = query(conn, sql, args);
 		ResultSet resultSet = preStmt.executeQuery();
@@ -73,6 +79,25 @@ public class DbUtils {
 		Map<String, Object> record = null;
 		while (resultSet.next()) {
 			record = new HashMap<String, Object>();
+			for (int i = 1; i <= metaData.getColumnCount(); i++)
+				record.put(metaData.getColumnName(i), resultSet.getObject(i));
+			listOfRec.add(record);
+		}
+		preStmt.close();
+		resultSet.close();
+		if (listOfRec.size() == 0)
+			return null;
+		return listOfRec;
+	}
+	
+	public static List<GnMap> getMapList(Connection conn, String sql, Object... args) throws SQLException {
+		PreparedStatement preStmt = query(conn, sql, args);
+		ResultSet resultSet = preStmt.executeQuery();
+		ResultSetMetaData metaData = resultSet.getMetaData();
+		List<GnMap> listOfRec = new ArrayList<GnMap>();
+		GnMap record = null;
+		while (resultSet.next()) {
+			record = new GnMap();
 			for (int i = 1; i <= metaData.getColumnCount(); i++)
 				record.put(metaData.getColumnName(i), resultSet.getObject(i));
 			listOfRec.add(record);
@@ -295,7 +320,7 @@ public class DbUtils {
 		XSSFCell cell = null;
 		int rowNum = 0;
 		row = sheet.createRow(rowNum);
-		List<Map<String, Object>> headings = DbUtils.getMapList(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
+		List<Map<String, Object>> headings = DbUtils.getMapList1(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
 		List<String> headingsList = new ArrayList<String>();
 		headingsList.add("INSTITUTE NAME");
 		for(Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
@@ -307,7 +332,7 @@ public class DbUtils {
 		}
 		rowNum++;
 		
-		List<Map<String, Object>> institute = DbUtils.getMapList(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
+		List<Map<String, Object>> institute = DbUtils.getMapList1(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
 		List<String> instituteList = new ArrayList<String>();
 		for(Map<String, Object> m : institute) m.forEach((key, value) -> instituteList.add(value.toString()));
 		
@@ -337,7 +362,7 @@ public class DbUtils {
 	
 	@SuppressWarnings("unused")
 	private static List<String> getData(Connection conn, String query) throws Exception{
-		List<Map<String, Object>> headings = DbUtils.getMapList(conn, query);
+		List<Map<String, Object>> headings = DbUtils.getMapList1(conn, query);
 		List<String> headingsList = new ArrayList<String>();
 //		headingsList.add("INSTITUTE NAME");
 		for (Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
@@ -354,7 +379,7 @@ public class DbUtils {
 		XSSFCell cell = null;
 		int rowNum = 0;
 		row = sheet.createRow(rowNum);
-		List<Map<String, Object>> headings = DbUtils.getMapList(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
+		List<Map<String, Object>> headings = DbUtils.getMapList1(conn, "SELECT distinct temp_research_areas FROM `zc_naarm`.`wos_research_areas_data`;");
 		List<String> headingsList = new ArrayList<String>();
 		headingsList.add("INSTITUTE NAME");
 		for (Map<String, Object> m : headings) m.forEach((key, value) -> headingsList.add(value.toString()));
@@ -365,7 +390,7 @@ public class DbUtils {
 			sheet.autoSizeColumn(cellNum);
 		}
 		rowNum++;
-		List<Map<String, Object>> institute = DbUtils.getMapList(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
+		List<Map<String, Object>> institute = DbUtils.getMapList1(conn, "SELECT   distinct `temp_institution`  FROM  `zc_naarm`.`wos_research_areas_data`;");
 		List<String> instituteList = new ArrayList<String>();
 		for (Map<String, Object> m : institute)
 			m.forEach((key, value) -> instituteList.add(value.toString()));

@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -25,8 +24,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.mongodb.DB;
 
 
 /**
@@ -48,6 +45,7 @@ public class DatabaseToExcel {
 ////			columns.add(m.values());
 //		}
 		System.out.println(columns);
+		@SuppressWarnings("unused")
 		List<String> columns1 = new ArrayList<String>();
 		for (int i = 1; i <= metaData.getColumnCount(); i++) {
 			columns.add(metaData.getColumnLabel(i));
@@ -87,12 +85,13 @@ public class DatabaseToExcel {
 		return "Success";
 	}
 	
+	@SuppressWarnings("unused")
 	public static String databaseToExcelForNaarm(ResultSet resultSet, String fileName, Connection con,String s)
 			throws SQLException, FileNotFoundException, IOException {
 
 		ResultSetMetaData metaData = resultSet.getMetaData();
 		ResultSet set = DbUtils.getExecuteQueryForNaarms(con, s);
-		List<Map<String, Object>> test = DbUtils.getMapList(con, s);
+		List<Map<String, Object>> test = DbUtils.getMapList1(con, s);
 		List<String> columns = new ArrayList<String>();
 		columns.add("NAME OF THE INSTITUTE");
 		for (int i = 1; i <= metaData.getColumnCount(); i++) {

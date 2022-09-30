@@ -64,7 +64,7 @@ public class Script {
 	public void polishDatabase(Connection connection, String schema,  boolean isTruncate) throws SQLException {
 		String query = isTruncate ? Constants.TRUNCATE:Constants.DELETE;
 		query = query.replace("{{schema}}", schema);
-		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
+		List<GnMap> listMap = DbUtils.getMapList(connection, query);
 //		DbUtils.execute("SET SQL_SAFE_UPDATES = 0;", connection);
 //		DbUtils.execute("SET FOREIGN_KEY_CHECKS = 0;", connection);
 		for(Map<String, Object> map : listMap) {
@@ -84,8 +84,8 @@ public class Script {
 		List<String> queries = new ArrayList<String>();
 		String query = isTruncate ? Constants.TRUNCATE:Constants.DELETE;
 		query = query.replace("{{schema}}", schema);
-		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
-		for(Map<String, Object> map : listMap) {
+		List<GnMap> listMap = DbUtils.getMapList(connection, query);
+		for(GnMap map : listMap) {
 			for(Object s : map.values()) {
 				String _q = s.toString();
 				if(isTruncate) {
@@ -103,8 +103,8 @@ public class Script {
 		List<String> queries = new ArrayList<String>();
 		String query = Constants.AUTO_INCREMENT;
 		query = query.replace("{{schema}}", schema);
-		List<Map<String, Object>> listMap = DbUtils.getMapList(connection, query);
-		for(Map<String, Object> map : listMap) {
+		List<GnMap> listMap = DbUtils.getMapList(connection, query);
+		for(GnMap map : listMap) {
 			for(Object s : map.values()) {
 				String _q = s.toString();
 					queries.add(_q);

@@ -16,9 +16,11 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,17 @@ public class Utility {
 	private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z]+(\\.[A-Za-z]+)*(\\.[A-Za-z]{2})$";
 	private static final String PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{5,12})";
 	private static final String PHONE_REGEX = "^(\\+91?)?[6789]{1}\\d{9}$";
+	
+	public static void getUnpairedElement(Integer[] array) {
+		List<Integer>  list = Arrays.asList(array);
+		Set<Integer> ele = new HashSet<Integer>();
+		for(int i =0; i < list.size(); i++) {
+		    if (ele.contains(list.get(i))) {
+		         ele.remove(list.get(i));
+		    } else ele.add(list.get(i));
+		}
+		System.out.println(ele);
+	}
 	
 	public static boolean isBlank(Object o) {
 		if (o == null)
@@ -371,6 +384,7 @@ public class Utility {
 	
 	public static void main(String[] args) {
 		System.out.println(isValidPhone("5542706937"));
+		getUnpairedElement(new Integer[] {9, 3, 9, 3, 9, 7, 9});
 	}
 	
 	public static String formatDate(String date,String format) {
